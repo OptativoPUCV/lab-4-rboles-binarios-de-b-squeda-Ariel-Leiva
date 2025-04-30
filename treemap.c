@@ -121,7 +121,7 @@ void removeNode(TreeMap * tree, TreeNode* node) {
     TreeNode* min = minimum(node->right); // encontrar sucesor
     node->pair->key = min->pair->key;
     node->pair->value = min->pair->value;
-    removeNode(tree, min); // eliminar el sucesor
+    removeNode(tree, min); // eliminar el sucesor recursivo
 }
 
 void eraseTreeMap(TreeMap * tree, void* key){
@@ -164,5 +164,17 @@ Pair * firstTreeMap(TreeMap * tree) {
 }
 
 Pair * nextTreeMap(TreeMap * tree) {
+    if (tree == NULL || tree->current == NULL) return NULL;
+
+    TreeNode * actual = tree->current;
+
+    if (actual->right != NULL) {
+        actual = actual->right;
+        while (actual->left != NULL) {
+            actual = actual->left;
+        }
+        tree->current = actual;
+        return actual->pair;
+    }
     return NULL;
 }
