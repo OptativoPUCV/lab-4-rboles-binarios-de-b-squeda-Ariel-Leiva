@@ -163,7 +163,6 @@ Pair * upperBound(TreeMap * tree, void* key) {
             ub = actual;
             actual = actual->left;
         } 
-
         else actual = actual->right;
     }
 
@@ -180,15 +179,22 @@ Pair * firstTreeMap(TreeMap * tree) {
 Pair * nextTreeMap(TreeMap * tree) {
     if (tree == NULL || tree->current == NULL) return NULL;
 
-    TreeNode * actual = tree->current;
+    TreeNode* current = tree->current;
+    TreeNode* next;
 
-    if (actual->right != NULL) {
-        actual = actual->right;
-        while (actual->left != NULL) {
-            actual = actual->left;
+    // Caso 1: Si hay hijo derecho, el sucesor es el mínimo del subárbol derecho
+    if (current->right != NULL) {
+        next = minimum(current->right);
+    } 
+    // Caso 2: Si no hay hijo derecho, subir al ancestro más cercano
+    else {
+        next = current->parent;
+        while (next != NULL && current == next->right) {
+            current = next;
+            next = next->parent;
         }
-        tree->current = actual;
-        return actual->pair;
     }
-    return NULL;
+
+    tree->current = next;
+    return next ? next->pair : NULL;
 }
