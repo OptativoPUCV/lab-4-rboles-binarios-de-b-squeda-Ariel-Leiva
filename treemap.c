@@ -153,7 +153,26 @@ Pair * searchTreeMap(TreeMap * tree, void* key) {
 
 
 Pair * upperBound(TreeMap * tree, void* key) {
-    return NULL;
+    if (tree == NULL || tree->root == NULL) return NULL;
+
+    TreeNode* current = tree->root;
+    TreeNode* ub_node = NULL;
+
+    while (current != NULL) {
+        if (!tree->lower_than(current->pair->key, key) && !tree->lower_than(key, current->pair->key)) {
+            // current->key == key
+            return current->pair;
+        } else if (tree->lower_than(key, current->pair->key)) {
+            // current->key > key → posible upper bound
+            ub_node = current;
+            current = current->left;
+        } else {
+            // current->key < key
+            current = current->right;
+        }
+    }
+
+    return (ub_node != NULL) ? ub_node->pair : NULL;
 }
 
 Pair * firstTreeMap(TreeMap * tree) {
